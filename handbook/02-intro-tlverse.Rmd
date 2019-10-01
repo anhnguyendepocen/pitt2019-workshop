@@ -117,15 +117,15 @@ user (you'll need a GitHub user account). Follow these two steps:
 3. Copy your Personal Access Token, a long string of lowercase letters and
    numbers.
 4. Type `usethis::edit_r_environ()` in your R console, which will open your
-   '.Renviron' file in the source window of RStudio.
-5. In your '.Renviron' file, type "GITHUB_PAT=" and then paste your Personal
+   `.Renviron` file in the source window of RStudio.
+5. In your `.Renviron` file, type `GITHUB_PAT=` and then paste your Personal
    Access Token after the equals symbol with no space.
-6. In your '.Renviron' file, press the enter key to ensure that your '.Renviron'
+6. In your `.Renviron` file, press the enter key to ensure that your `.Renviron`
    ends with a newline.
-7. Save your '.Renviron' file.
+7. Save your `.Renviron` file.
 8. Restart R for changes to take effect. You can restart R via the drop-down
    menu on the "Session" tab. The "Session" tab is at the top of the RStudio
    interface.
 
 After following these steps, you should be able to successfully install the
-package which threw the error above. 
+package which threw the error above.

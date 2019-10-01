@@ -1,9 +1,3 @@
-hand-washing---
-output: html_document
-editor_options:
-  chunk_output_type: console
----
-
 # The Targeted Learning Roadmap {#intro}
 
 A central goal of the Targeted Learning statistical paradigm is to estimate
@@ -13,7 +7,7 @@ and to do so with finite-sample robustness and consistent inference.
 ## The Statistical Model
 
 Assume we have an i.i.d. sample of confounders, a binary intervention of
-interest, and an outcome, or are observed data is  
+interest, and an outcome, or are observed data is
 \[ O = (W, A, Y).\]
 The
 distribution of the observed data may be factorized as follows:
@@ -50,7 +44,7 @@ that are relevant to the question under study [@pearl2009causality].
 Ignoring error terms, we will assume the following ordering of the variables in
 $O$.
 
-```{r, echo=F, eval=T}
+```{r, echo=FALSE, eval=TRUE, fig.align="center"}
 library(visNetwork)
 nodes <- data.frame(id=c("W","A","Y"))
 nodes$label <- nodes$id

@@ -32,7 +32,7 @@ efficient substitution estimator of this target quantity.
 The first step in this estimation procedure is an initial estimate of the
 data-generating distribution, or the relevant part of this distribution that is
 needed to evaluate the target parameter. For this initial estimation, we use the
-super learner [@van2007super], an important step for creating a robust
+super learner [@vdl2007super], an important step for creating a robust
 estimator.
 
 #### Super Learner {-}
@@ -56,7 +56,7 @@ estimator.
   cross-validated empirical risk of the library. Restricting the weights
   ("metalearner" in `sl3` nomenclature) to be positive and sum to one (convex
   combination) has been shown to improve upon the discrete super learner
-  [@polley2010super; @van2007super].
+  [@polley2010super; @vdl2007super].
 
  * This background material is described in greater detail in the accompanying
    `tlverse` handbook [`sl3`
@@ -379,8 +379,8 @@ head(chspred) %>%
   respects both the local and global constraints of the statistical model.
 
 * Asymptotically linear estimators are also advantageous, since they converge to
-  the estimand at $1/\sqrt{n}$ rate, and thereby permit formal statistical
-  inference.
+  the estimand at $\frac{1}{\sqrt{n}}$ rate, and thereby permit formal
+  statistical inference.
 
 * If we plug in the estimator returned by super learner into the target
   parameter mapping, then we would end up with an estimator that has the same

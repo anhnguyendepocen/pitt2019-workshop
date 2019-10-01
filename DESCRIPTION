@@ -1,5 +1,5 @@
-Package: acic2019workshop
-Title: ACIC 2019 Targeted Learning Workshop
+Package: pitt2019workshop
+Title: Targeted Learning Workshop at the University of Pittsburgh 2019
 Version: 0.0.1
 Imports:
   bookdown,
@@ -51,8 +51,8 @@ Remotes:
   github::tlverse/origami,
   github::tlverse/sl3,
   github::tlverse/tmle3,
-  github::tlverse/tmle3mopttx,
+  github::tlverse/tmle3mopttx@5ba5f65,
   github::tlverse/tmle3shift,
   github::nhejazi/haldensify
-URL: https://github.com/tlverse/acic2019-workshop
-BugReports: https://github.com/tlverse/acic2019-workshop/issues
+URL: https://github.com/tlverse/pitt2019-workshop
+BugReports: https://github.com/tlverse/pitt2019-workshop/issues
