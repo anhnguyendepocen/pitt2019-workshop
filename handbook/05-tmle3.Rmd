@@ -306,8 +306,9 @@ print(tmle_fit_multiparam)
 ## Exercise
 
 Follow the steps below to estimate an average treatment effect using data from
-the Collaborative Perinatal Project (CPP), available in the `sl3` package. To simplify this example, we define a binary intervention variable, `parity01`
--- an indicator of having one or more children before the current child and a
+the Collaborative Perinatal Project (CPP), available in the `sl3` package. To
+simplify this example, we define a binary intervention variable, `parity01` --
+an indicator of having one or more children before the current child and a
 binary outcome, `haz01` -- an indicator of having an above average height for
 age.
 
@@ -334,11 +335,11 @@ Effect (ATE):
 
 $$\Psi(P_0) = E_0(E_0[Y|A=1,W]-E_0[Y|A=0,W])$$
 
-The purely statistical (noncausal) parameter can be interpreted as the average
+The purely statistical (non-causal) parameter can be interpreted as the average
 of the difference in means across the strata for $W$, and only requires the
 positivity assumption, that the conditional treatment assignment probabilities
-are positive for each possible $w:P_0(A=1|W =w)>0$ and $P_0(A=0|W =w)>0$ for
-each possible $w$.
+are positive for each possible $w: P_0(A=1 \mid W=w) > 0$ and
+$P_0(A=0 \mid W=w) > 0$ for each possible $w$.
 
 To interpret this parameter as causal, specifically the causal risk difference
 $E_0Y_1-E_0Y_0$, then we would also need to make the randomization assumption
@@ -369,9 +370,10 @@ but also tailored to have robust finite sample performance.
 
 ```{r, metalrnr-exercise}
 metalearner <- make_learner(Lrnr_solnp,
-                            loss_function = loss_loglik_binomial,
-                            learner_function = metalearner_logistic_binomial)
-```   
+  loss_function = loss_loglik_binomial,
+  learner_function = metalearner_logistic_binomial
+)
+```
 
 5. Define one super learner for estimating $Q$ and another for estimating $g$.
    Use the metalearner above for both $Q$ and $g$ super learners.
@@ -383,7 +385,8 @@ metalearner <- make_learner(Lrnr_solnp,
    which we defined in Step 2; (2) the data; (3) the list of nodes, which we
    specified in Step 1; and (4) the list of super learners for estimating $g$
    and $Q$, which we defined in Step 6. *Note*: Like before, you will need to
-   make a data copy to deal with `data.table` weirdness (`cpp2 <- data.table::copy(cpp)`) and use `cpp2` as the data.
+   make a data copy to deal with `data.table` weirdness
+   (`cpp2 <- data.table::copy(cpp)`) and use `cpp2` as the data.
 
 ## Summary
 

@@ -96,7 +96,8 @@ set.seed(7194)
 
 # load data set and take a peek
 washb_data <- fread("https://raw.githubusercontent.com/tlverse/tlverse-data/master/wash-benefits/washb_data.csv",
-                    stringsAsFactors = TRUE)
+  stringsAsFactors = TRUE
+)
 
 head(washb_data) %>%
   kable(digits = 4) %>%
@@ -344,7 +345,7 @@ mean risk of the discrete super learner?
 ```{r ex-setup, message=FALSE, warning=FALSE}
 # load the data set
 db_data <-
- url("https://raw.githubusercontent.com/benkeser/sllecture/master/chspred.csv")
+  url("https://raw.githubusercontent.com/benkeser/sllecture/master/chspred.csv")
 chspred <- read_csv(file = db_data, col_names = TRUE)
 # take a quick peek
 head(chspred) %>%

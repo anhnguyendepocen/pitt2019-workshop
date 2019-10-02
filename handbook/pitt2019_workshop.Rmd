@@ -571,12 +571,12 @@ Ignoring error terms, we will assume the following ordering of the variables in 
 
 ```{r, echo=F, eval=T}
 library(visNetwork)
-nodes <- data.frame(id=c("W","A","Y"))
+nodes <- data.frame(id = c("W", "A", "Y"))
 nodes$label <- nodes$id
-edges <- data.frame(from=c("W","W","A"),to=c("A","Y","Y"))
-network <- visNetwork(nodes,edges, height="300px",width="200px") %>%
-  visEdges(arrows=list(to=TRUE))  %>%
-  visLayout(randomSeed=25)
+edges <- data.frame(from = c("W", "W", "A"), to = c("A", "Y", "Y"))
+network <- visNetwork(nodes, edges, height = "300px", width = "200px") %>%
+  visEdges(arrows = list(to = TRUE)) %>%
+  visLayout(randomSeed = 25)
 network
 ```
 
@@ -1247,7 +1247,7 @@ mean risk of the discrete super learner?
 ```{r ex-setup}
 # load the data set
 db_data <-
- url("https://raw.githubusercontent.com/benkeser/sllecture/master/chspred.csv")
+  url("https://raw.githubusercontent.com/benkeser/sllecture/master/chspred.csv")
 chspred <- read_csv(file = db_data, col_names = TRUE)
 # take a quick peek
 head(chspred) %>%
@@ -1961,8 +1961,10 @@ lrn_glm <- Lrnr_glm_fast$new()
 
 ## Define the Q learner:
 Q_learner <- Lrnr_sl$new(
-  learners = list(lrn_xgboost_50, lrn_xgboost_100,
-                  lrn_xgboost_500,lrn_mean, lrn_glm),
+  learners = list(
+    lrn_xgboost_50, lrn_xgboost_100,
+    lrn_xgboost_500, lrn_mean, lrn_glm
+  ),
   metalearner = Lrnr_nnls$new()
 )
 
@@ -1974,8 +1976,10 @@ g_learner <- Lrnr_sl$new(
 
 ## Define the B learner:
 b_learner <- Lrnr_sl$new(
-  learners = list(lrn_xgboost_50, lrn_xgboost_100,
-                  lrn_xgboost_500,lrn_mean, lrn_glm),
+  learners = list(
+    lrn_xgboost_50, lrn_xgboost_100,
+    lrn_xgboost_500, lrn_mean, lrn_glm
+  ),
   metalearner = Lrnr_nnls$new()
 )
 ```
@@ -2114,10 +2118,12 @@ Q_learner <- Lrnr_sl$new(
 )
 
 # Define the g learner, which is a multinomial learner:
-#specify the appropriate loss of the multinomial learner:
-mn_metalearner <- make_learner(Lrnr_solnp, loss_function = loss_loglik_multinomial,
-                               learner_function = metalearner_linear_multinomial)
-g_learner <- make_learner(Lrnr_sl, list(lrn_xgboost_100,lrn_xgboost_500,lrn_mean), mn_metalearner)
+# specify the appropriate loss of the multinomial learner:
+mn_metalearner <- make_learner(Lrnr_solnp,
+  loss_function = loss_loglik_multinomial,
+  learner_function = metalearner_linear_multinomial
+)
+g_learner <- make_learner(Lrnr_sl, list(lrn_xgboost_100, lrn_xgboost_500, lrn_mean), mn_metalearner)
 
 # Define the Blip learner, which is a multivariate learner:
 learners <- list(lrn_xgboost_50, lrn_xgboost_100, lrn_xgboost_500, lrn_mean, lrn_glm)
@@ -2268,7 +2274,7 @@ described in the previous section:
 
 ```{r data_vim-nodes-mopttx}
 # bin baseline covariates to 3 categories:
-data$W1<-ifelse(data$W1<quantile(data$W1)[2],1,ifelse(data$W1<quantile(data$W1)[3],2,3))
+data$W1 <- ifelse(data$W1 < quantile(data$W1)[2], 1, ifelse(data$W1 < quantile(data$W1)[3], 2, 3))
 
 node_list <- list(
   W = c("W3", "W4", "W2"),
@@ -2290,7 +2296,7 @@ interest (called a `tmle3_Spec` in the `tlverse` nomenclature) simply by calling
 ```{r mopttx_spec_init_vim}
 # initialize a tmle specification
 tmle_spec <- tmle3_mopttx_vim(
-  V=c("W2"),
+  V = c("W2"),
   type = "blip2",
   learners = learner_list,
   contrast = "multiplicative",
@@ -2395,8 +2401,10 @@ head(washb_data, 3)
 As before, we specify the NPSEM via the `node_list` object.
 
 ```{r washb-data-npsem-mopttx, message=FALSE, warning=FALSE, cache=FALSE, eval=FALSE}
-node_list <- list(W = names(washb_data)[!(names(washb_data) %in% c("whz", "tr"))],
-                  A = "tr", Y = "whz")
+node_list <- list(
+  W = names(washb_data)[!(names(washb_data) %in% c("whz", "tr"))],
+  A = "tr", Y = "whz"
+)
 ```
 
 We pick few potential effect modifiers, including mother's education, current
@@ -2405,15 +2413,15 @@ We concentrate of these covariates as they might be indicative of the socio-econ
 of individuals involved in the trial. We can explore the distribution of our $V$, $A$ and $Y$:
 
 ```{r summary_WASH, eval=FALSE}
-#V1, V2 and V3:
+# V1, V2 and V3:
 table(washb_data$momedu)
 table(washb_data$floor)
 table(washb_data$asset_refrig)
 
-#A:
+# A:
 table(washb_data$tr)
 
-#Y:
+# Y:
 summary(washb_data$whz)
 ```
 
@@ -2424,30 +2432,38 @@ will define the `xgboost` over a grid of parameters, and initialize a mean learn
 
 ```{r sl3_lrnrs-WASH-mopttx, eval=FALSE}
 # Initialize few of the learners:
-grid_params = list(nrounds = c(100, 500),
-                     eta = c(0.01, 0.1))
-grid = expand.grid(grid_params, KEEP.OUT.ATTRS = FALSE)
-xgb_learners = apply(grid, MARGIN = 1, function(params_tune) {
-    do.call(Lrnr_xgboost$new, c(as.list(params_tune)))
-  })
+grid_params <- list(
+  nrounds = c(100, 500),
+  eta = c(0.01, 0.1)
+)
+grid <- expand.grid(grid_params, KEEP.OUT.ATTRS = FALSE)
+xgb_learners <- apply(grid, MARGIN = 1, function(params_tune) {
+  do.call(Lrnr_xgboost$new, c(as.list(params_tune)))
+})
 lrn_mean <- Lrnr_mean$new()
 
 ## Define the Q learner, which is just a regular learner:
 Q_learner <- Lrnr_sl$new(
-  learners = list(xgb_learners[[1]], xgb_learners[[2]], xgb_learners[[3]],
-                  xgb_learners[[4]], lrn_mean),
+  learners = list(
+    xgb_learners[[1]], xgb_learners[[2]], xgb_learners[[3]],
+    xgb_learners[[4]], lrn_mean
+  ),
   metalearner = Lrnr_nnls$new()
 )
 
 # Define the g learner, which is a multinomial learner:
-#specify the appropriate loss of the multinomial learner:
-mn_metalearner <- make_learner(Lrnr_solnp, loss_function = loss_loglik_multinomial,
-                               learner_function = metalearner_linear_multinomial)
+# specify the appropriate loss of the multinomial learner:
+mn_metalearner <- make_learner(Lrnr_solnp,
+  loss_function = loss_loglik_multinomial,
+  learner_function = metalearner_linear_multinomial
+)
 g_learner <- make_learner(Lrnr_sl, list(xgb_learners[[4]], lrn_mean), mn_metalearner)
 
 # Define the Blip learner, which is a multivariate learner:
-learners <- list(xgb_learners[[1]], xgb_learners[[2]], xgb_learners[[3]],
-                  xgb_learners[[4]], lrn_mean)
+learners <- list(
+  xgb_learners[[1]], xgb_learners[[2]], xgb_learners[[3]],
+  xgb_learners[[4]], lrn_mean
+)
 b_learner <- create_mv_learners(learners = learners)
 
 learner_list <- list(Y = Q_learner, A = g_learner, B = b_learner)
@@ -2461,18 +2477,18 @@ as well since "Control" is a good reference category.
 ```{r spec_init_WASH, eval=FALSE}
 ## Question 2:
 
-#Initialize a tmle specification
+# Initialize a tmle specification
 tmle_spec <- tmle3_mopttx_blip_revere(
   V = c("momedu", "floor", "asset_refrig"), type = "blip2",
   learners = learner_list, maximize = TRUE, complex = TRUE,
   realistic = FALSE
 )
 
-#Fit the TML estimator.
-fit <- tmle3(tmle_spec, data=washb_data, node_list, learner_list)
+# Fit the TML estimator.
+fit <- tmle3(tmle_spec, data = washb_data, node_list, learner_list)
 fit
 
-#Which intervention is the most dominant? 
+# Which intervention is the most dominant?
 table(tmle_spec$return_rule)
 ```
 
@@ -2482,15 +2498,15 @@ and the corresponding value of the realistic ITR:
 ```{r spec_init_WASH_simple_q3, eval=FALSE}
 ## Question 3:
 
-#Initialize a tmle specification with "realistic=TRUE":
+# Initialize a tmle specification with "realistic=TRUE":
 tmle_spec <- tmle3_mopttx_blip_revere(
   V = c("momedu", "floor", "asset_refrig"), type = "blip2",
   learners = learner_list, maximize = TRUE, complex = TRUE,
   realistic = TRUE
 )
 
-#Fit the TML estimator.
-fit <- tmle3(tmle_spec, data=washb_data, node_list, learner_list)
+# Fit the TML estimator.
+fit <- tmle3(tmle_spec, data = washb_data, node_list, learner_list)
 fit
 
 table(tmle_spec$return_rule)
