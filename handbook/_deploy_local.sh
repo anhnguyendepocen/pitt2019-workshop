@@ -1,6 +1,6 @@
 #!/bin/sh
 
-git clone -b gh-pages https://github.com/tlverse/acic2019-workshop book-output
+git clone -b gh-pages https://github.com/tlverse/pitt2019-workshop book-output
 cd book-output
 cp -r ../_book/* ./
 git add --all *

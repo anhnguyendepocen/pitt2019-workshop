@@ -8,5 +8,3 @@
 * Treatment: *tr* -- Randomized Treatment Group
 * Covariates: *everything else* -- TODO: Describe
 
-## Acknowledgements
-

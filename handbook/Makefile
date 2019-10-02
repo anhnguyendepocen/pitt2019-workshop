@@ -1,7 +1,5 @@
-TITLE=acic2019_workshop
-
 .PHONY: all
-all: book
+all: style book code
 
 book:
 	sh ./_build.sh
