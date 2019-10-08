@@ -179,12 +179,13 @@ These principles guide our approach to estimation: Super Learning for
 prediction (more generally density estimation) and TMLE for estimation of our
 intervention parameters of interest.
 
-### SuperLearning
+### Super Learning
 
 - There is no universally optimal machine learning algorithm for density
   estimation or prediction.
 - When we have tested different algorithms on actual
-  data and looked at the performance (e.g., MSE of prediction), never does one algorithm always win (see below).
+  data and looked at the performance (e.g., MSE of prediction), never does one
+  algorithm always win (see below).
 - For some data, one needs learners that can model a complex function.
 - For others, typically the result of noise or insufficient sample size, a
   simple, parametric model might fit best.

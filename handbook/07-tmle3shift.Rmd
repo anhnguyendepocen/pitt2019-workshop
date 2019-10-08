@@ -314,8 +314,8 @@ results from computing our TML estimator.
   stochastic intervention policies in an _a priori_ manner.
 
 * To ascertain whether a given choice of the shift $\delta$ is acceptable, let
-  there be a bound $C(\delta) = \frac{g^{\star}(a \mid w)}{g(a \mid w)} < M$, where
-  $g^{\star}(a \mid w)$ is a function of $\delta$ in part, and $M$ is a
+  there be a bound $C(\delta) = \frac{g^{\star}(a \mid w)}{g(a \mid w)} \leq M$,
+  where $g^{\star}(a \mid w)$ is a function of $\delta$ in part, and $M$ is a
   user-specified upper bound of $C(\delta)$. Then, $C(\delta)$ is a measure of
   the influence of a given observation (under a bound of the ratio of the
   conditional densities), which provides a way to limit the maximum influence of
@@ -445,7 +445,7 @@ data, convert all columns to be of class `numeric`, and take a quick look at it
 
 ```{r load-washb-data-shift, message=FALSE, warning=FALSE, cache=FALSE}
 washb_data <- fread("https://raw.githubusercontent.com/tlverse/tlverse-data/master/wash-benefits/washb_data_subset.csv", stringsAsFactors = TRUE)
-washb_data <- washb_data[!is.na(momage), lapply(.SD, as.numeric)]
+washb_data <- washb_data[!is.na(momage) & !is.na(momheight), ]
 head(washb_data, 3)
 ```
 
@@ -470,21 +470,26 @@ To simplify our interpretation, consider a shift (up or down) of two years in
 the mother's age (i.e., $\delta = \{-2, 0, 2\}$); in this setting, a stochastic
 intervention would correspond to a policy advocating that potential mothers
 defer or accelerate plans of having a child for two calendar years, possibly
-implemented through an encouragement design deployed in a clinical setting.
+implemented through the deployment of an encouragement design.
 
-For this example, we'll use the variable importance strategy of considering a
-grid of stochastic interventions to evaluate the weight-for-height Z-score under
-a shift in the mother's age down by two years ($\delta = -2$) through up by two
-years ($\delta = 2$), incrementing by a single year between the two. To do this,
-we simply initialize a `Spec` `tmle_vimshift_delta` similar to how we did in a
-previous example:
-
-```{r vim_spec_init_washb, message=FALSE, warning=FALSE}
-# initialize a tmle specification for the variable importance parameter
-washb_vim_spec <- tmle_vimshift_delta(
-  shift_grid = seq(from = -2, to = 2, by = 1),
-  max_shifted_ratio = 2
+First, let's try a simple upward shift of just two years:
+```{r shift_spec_init_washb, message=FALSE, warning=FALSE}
+# initialize a tmle specification for just a single delta shift
+washb_shift_spec <- tmle_shift(
+  shift_val = 2,
+  shift_fxn = shift_additive,
+  shift_fxn_inv = shift_additive_inv
 )
+```
+
+To examine the effect modification approach we looked at in previous chapters,
+we'll estimate the effect of this shift $\delta = 2$ while stratifying on the
+mother's education level (`momedu`, a categorical variable with three levels).
+For this, we augment our initialized `tmle3_Spec` object like so
+
+```{r shift_spec_emm_washb, message=FALSE, warning=FALSE}
+# initialize effect modification specification around previous specification
+washb_shift_strat_spec <-  tmle_stratified(washb_shift_spec, "momedu")
 ```
 
 Prior to running our analysis, we'll modify the `learner_list` object we had
@@ -497,8 +502,8 @@ lasso [@diaz2011super; @benkeser2016hal; @coyle2018hal9001;
 ```{r sl3_lrnrs-gfit-shift-washb, message=FALSE, warning=FALSE}
 # learners used for conditional density regression (i.e., propensity score)
 lrn_rfcde <- Lrnr_rfcde$new(
-  n_trees = 250, node_size = 5,
-  n_basis = 20, output_type = "observed"
+  n_trees = 1000, node_size = 5,
+  n_basis = 31, output_type = "observed"
 )
 
 # we need to turn on cross-validation for the RFCDE learner
@@ -509,6 +514,31 @@ lrn_cv_rfcde <- Lrnr_cv$new(
 
 # modify learner list, using existing SL for Q fit
 learner_list <- list(Y = sl_lrn, A = lrn_cv_rfcde)
+```
+
+Now we're ready to construct a TML estimate of the shift parameter at
+$\delta = 2$, stratified across levels of our variable of interest:
+
+```{r fit_shift_emm_washb, message=FALSE, warning=FALSE}
+# fit stratified TMLE
+washb_shift_strat_fit <- tmle3(washb_shift_strat_spec, washb_data, node_list,
+                               learner_list)
+washb_shift_strat_fit
+```
+
+For the next example, we'll use the variable importance strategy of considering
+a grid of stochastic interventions to evaluate the weight-for-height Z-score
+under a shift in the mother's age down by two years ($\delta = -2$) through up
+by two years ($\delta = 2$), incrementing by a single year between the two. To
+do this, we simply initialize a `Spec` `tmle_vimshift_delta` similar to how we
+did in a previous example:
+
+```{r vim_spec_init_washb, message=FALSE, warning=FALSE}
+# initialize a tmle specification for the variable importance parameter
+washb_vim_spec <- tmle_vimshift_delta(
+  shift_grid = seq(from = -2, to = 2, by = 1),
+  max_shifted_ratio = 2
+)
 ```
 
 Having made the above preparations, we're now ready to estimate the
