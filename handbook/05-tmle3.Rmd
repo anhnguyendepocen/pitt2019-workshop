@@ -303,6 +303,22 @@ tmle_fit_multiparam <- fit_tmle3(
 print(tmle_fit_multiparam)
 ```
 
+## Stratified Effect Estimates
+
+TMLE can also be applied to estimate effects in in strata of a baseline covariate. The tmle_stratified spec makes it easy to extend an existing spec with stratification.
+
+For instance, we can estimate strata specific ATEs as follows:
+$ATE = \mathbb{E}_0(Y(1)-Y(0) \mid V=v ) =
+\mathbb{E}_0\left(\mathbb{E}_0[Y \mid A=1,W]-\mathbb{E}_0[Y \mid A=0,W] \mid V=v \right)$
+
+For example, we can stratify the above ATE spec to estimate the ATE in strata of sex:
+```{r stratified_ate}
+stratified_ate_spec <- tmle_stratified(ate_spec, "sex")
+stratified_fit <- tmle3(stratified_ate_spec, washb_data, node_list, learner_list)
+print(stratified_fit)
+```
+This TMLE is consistent for both the marginal ATE as well as the ATEs in strata of V. For continuous V, this could be extended using a working Marginal Structural Model (MSM), although that has not yet been implemented in `tmle3`.
+
 ## Exercise
 
 Follow the steps below to estimate an average treatment effect using data from
